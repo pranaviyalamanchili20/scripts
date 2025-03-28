@@ -55,7 +55,7 @@ def extract_tables_from_pdf(pdf_path, start_page):
                 if not area_code:
                     # If area code is not found in the page text, check inside the table
                     area_code = extract_area_code_from_table(df)
-                print(f"Area code for page {page_number + 1}: {area_code}")  # Debug print
+                #print(f"Area code for page {page_number + 1}: {area_code}")  # Debug print
                 table_head = df.head(0)
                 header_columns_list = table_head.columns.tolist()
                 header_columns_length = len(header_columns_list)
