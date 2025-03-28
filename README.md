@@ -6,5 +6,9 @@ Run the file 'rateParser2.py' using command -> 'python rateParser2.py'
 The output is written to output.txt
 
 You might need to install
+- python
+- java
 - pip install tabula
 - pip install PyPDF2
+
+Code starts to read tables from page 8. Change as needed depending on PDF.

@@ -1,5 +1,6 @@
 import tabula
 import PyPDF2
+from PyPDF2 import PdfReader
 import pandas as pd
 import os
 import re
@@ -8,6 +9,11 @@ import warnings
 #PDFBox library used by Tabula for PDF processing generates warnings which are not relevant to the functionality of the code.
 warnings.filterwarnings("ignore")
 
+def get_total_pages(pdf_path):
+    with open(pdf_path, 'rb') as file:
+        reader = PdfReader(file)
+        return len(reader.pages)
+    
 def extract_area_code_from_page(pdf_path, page_number):
     # Open the PDF file
     with open(pdf_path, 'rb') as file:
@@ -33,11 +39,12 @@ def extract_area_code_from_table(df):
 
 def extract_tables_from_pdf(pdf_path, start_page):
     # Get the total number of pages in the PDF
-    total_pages = tabula.read_pdf(pdf_path, pages='all', multiple_tables=True)
-    total_pages_count = len(total_pages)
+    total_pages_count = get_total_pages(pdf_path)  # Call the function to get total pages
+    print(f"Total pages in the PDF: {total_pages_count}")  # Debug print
     table_counts = []
     # Loop through the pages from start_page till the end
     for page_number in range(start_page, total_pages_count):
+        print(f"Extracting data from page {page_number + 1}...") 
         # Extract tables from the specified page
         tables = tabula.read_pdf(pdf_path, pages=page_number + 1, multiple_tables=True)
         # Count the number of tables
@@ -75,6 +82,7 @@ def extract_tables_from_pdf(pdf_path, start_page):
                         for i in range(len(carrier_age_data)):
                             row_output = f"{area_code} ,{plan_type} , {carrier_details_data[0]} , {carrier_details_data[1]} , {carrier_details_data[2]} , {age_details[i]} , {carrier_age_data[i]}"
                             f.write(f"{row_output}" '\n')
+    print("All pages have been processed. Extraction complete.")
     return table_counts
 
 def main():
