@@ -1,9 +1,9 @@
 The rateGuide files are downloaded and stored to 'data' folder
 
 Running Instructions:
-Git clone the repo 'scripts'
-Run the file 'rateParser2.py' using command -> 'python rateParser2.py'
-The output is written to output.txt
+  -Git clone the repo 'scripts'
+  -Run the file 'rateParser2.py' using command -> 'python rateParser2.py'
+  -The output is written to output.txt
 
 You might need to install
 - python
@@ -12,3 +12,5 @@ You might need to install
 - pip install PyPDF2
 
 Code starts to read tables from page 8. Change as needed depending on PDF.
+
+Ignore the errors from jType
