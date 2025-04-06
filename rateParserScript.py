@@ -14,6 +14,19 @@ def get_total_pages(pdf_path):
         reader = PdfReader(file)
         return len(reader.pages)
     
+def extract_effective_date_from_page(pdf_path, page_number):
+    # Open the PDF file
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        # Extract text from the specified page
+        page = reader.pages[page_number - 1]
+        text = page.extract_text()
+        # Use regex to find the date in the format "MM/DD/YY"
+        match = re.search(r'\d{2}/\d{2}/\d{2}', text)
+        if match:
+            return match.group(0)
+    return None
+    
 def extract_area_code_from_page(pdf_path, page_number):
     # Open the PDF file
     with open(pdf_path, 'rb') as file:
@@ -50,7 +63,10 @@ def extract_tables_from_pdf(pdf_path, start_page):
         # Count the number of tables
         table_count = len(tables)
         # Append the page number and table count to the list
-        table_counts.append((page_number + 1, table_count))  # + to convert zero-indexed to one-indexed
+        table_counts.append((page_number + 1, table_count))  # + to convert zero-indexed to one-indexed   
+        # Extract the effective date
+        effective_date = extract_effective_date_from_page(pdf_path, page_number + 1)
+
         # Process each table
         for table in tables:
             # Convert the table to a DataFrame
@@ -80,7 +96,7 @@ def extract_tables_from_pdf(pdf_path, start_page):
                         carrier_details_data = [row.iloc[0], row.iloc[1], row.iloc[2]]
                         carrier_age_data = row.iloc[3:len(age_details) + 3]
                         for i in range(len(carrier_age_data)):
-                            row_output = f"{area_code} ,{plan_type} , {carrier_details_data[0]} , {carrier_details_data[1]} , {carrier_details_data[2]} , {age_details[i]} , {carrier_age_data[i]}"
+                            row_output = f"{area_code} ,{effective_date} ,{plan_type} , {carrier_details_data[0]} , {carrier_details_data[1]} , {carrier_details_data[2]} , {age_details[i]} , {carrier_age_data[i]}"
                             f.write(f"{row_output}" '\n')
     print("All pages have been processed. Extraction complete.")
     return table_counts
